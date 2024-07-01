@@ -1,0 +1,19 @@
+#!/bin/bash
+
+TMPD=$(mktemp -d)
+echo $TMPD
+
+XNAME=incomeenergy
+./energygraph --html=$TMPD/$XNAME.html --divid=$XNAME --noshow
+sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
+
+XNAME=gdpelectricity
+./energygraph --plotx=gdp --ploty=electricity --html=$TMPD/$XNAME.html --divid=$XNAME --noshow
+sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
+
+XNAME=random
+./randomgraph --html=$TMPD/$XNAME.html --divid=$XNAME --noshow
+sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
+
+cat $TMPD/*.tmp >$TMPD/_merge.js
+uglifyjs $TMPD/_merge.js >inen.js
