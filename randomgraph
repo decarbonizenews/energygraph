@@ -1,0 +1,78 @@
+#!/usr/bin/python3
+
+import argparse
+import random
+
+import plotly.express as px
+
+# to get the same output on mutliple runs
+random.seed(1)
+
+ap = argparse.ArgumentParser()
+ap.add_argument("--noshow", action="store_true")
+ap.add_argument("--png")
+ap.add_argument("--svg")
+ap.add_argument("--html")
+ap.add_argument("--divid", default="plot1")
+args = ap.parse_args()
+
+
+mdat = []
+x = []
+y = []
+for _ in range(500):
+    v = {}
+    v["x"] = random.randint(1, 1000000)
+    v["y"] = random.randint(1, 1000000)
+    v["size"] = random.randint(1, 1000)
+    mdat.append(v)
+    x.append(v["x"])
+    y.append(v["y"])
+
+try:
+    import scipy
+
+    linre = scipy.stats.linregress(x, y)
+    print("r : " + str(linre.rvalue))
+    print("r^2 : " + str(linre.rvalue**2))
+except ImportError:
+    print("scipy not available, cannot calculate r (correlation coefficient)")
+
+fig = px.scatter(
+    mdat,
+    x="x",
+    y="y",
+    size="size",
+    size_max=15,
+    log_x=True,
+    log_y=True,
+    width=640,
+    height=360,
+)
+
+fig.update_layout(
+    plot_bgcolor="Cornsilk",
+    margin={"l": 0, "r": 0, "b": 0, "t": 0},
+    font={"family": "Roboto"},
+    xaxis_title="Random data",
+    yaxis_title="Random data",
+)
+fig.update_xaxes(gridcolor="lightgrey", rangemode="tozero")
+fig.update_yaxes(gridcolor="lightgrey", rangemode="tozero")
+
+
+if not args.noshow:
+    fig.show()
+
+if args.png:
+    fig.write_image(args.png)
+if args.svg:
+    fig.write_image(args.svg)
+if args.html:
+    fig.write_html(
+        args.html,
+        include_plotlyjs=False,
+        include_mathjax=False,
+        full_html=False,
+        div_id=args.divid,
+    )
