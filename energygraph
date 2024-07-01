@@ -1,0 +1,164 @@
+#!/usr/bin/python3
+
+import argparse
+import csv
+import json
+
+import plotly.express as px
+
+GDP_DATA = "data/wb-gdp/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_584781.csv"
+INCOME_DATA = "data/wb-income/API_NY.ADJ.NNTY.PC.CD_DS2_en_csv_v2_422024.csv"
+POPU_DATA = "data/wb-population/API_SP.POP.TOTL_DS2_en_csv_v2_584796.csv"
+EIA_DATA = "data/eia/INTL.txt"
+
+INVALID_VALUES = ["NA", "--", "", 0]
+
+VERBOSE_DESC = {
+    "income": "Average Income (US$)",
+    "energy": "Energy Consumption per Capita (MWh)",
+}
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-y", "--year", default="2019")
+ap.add_argument("--plotx", default="income")
+ap.add_argument("--ploty", default="energy")
+ap.add_argument("--skipsmall", type=int)
+ap.add_argument("--filterxbelow", type=int)
+ap.add_argument("--filterxabove", type=int)
+ap.add_argument("--filterybelow", type=int)
+ap.add_argument("--filteryabove", type=int)
+ap.add_argument("--hidenames", action="store_true")
+ap.add_argument("--noshow", action="store_true")
+ap.add_argument("--png")
+ap.add_argument("--svg")
+ap.add_argument("--html")
+ap.add_argument("--divid", default="plot1")
+args = ap.parse_args()
+
+ndat = {}
+
+
+# parsing CSV files from the World Bank
+def wbdat(filename, datayear, key):
+    with open(filename, encoding="utf-8") as csvfile:
+        csvreader = csv.reader(csvfile)
+        started = False
+        for row in csvreader:
+            if not started and row != [] and row[0] == "Country Name":
+                for i in range(1, len(row)):
+                    if row[i] == datayear:
+                        ind = i
+                        started = True
+            elif started and row[ind] not in INVALID_VALUES:
+                country = row[1]
+                countryname = row[0]
+                if country not in ndat:
+                    ndat[country] = {"countryname": countryname}
+                ndat[country][key] = float(row[ind])
+
+
+wbdat(POPU_DATA, args.year, "population")
+wbdat(GDP_DATA, args.year, "gdp")
+wbdat(INCOME_DATA, args.year, "income")
+
+
+with open(EIA_DATA, encoding="ascii") as f:
+    for line in f:
+        l = json.loads(line)
+        if "geography" not in l or l["geography"] not in ndat:
+            continue
+        countrycode = l["geography"]
+        if l["name"].startswith("Energy consumption per capita"):
+            for d in l["data"]:
+                if d[0] == args.year and d[1] not in INVALID_VALUES:
+                    energy_mbtu = float(d[1])
+                    ndat[countrycode]["energy"] = energy_mbtu * 293.07107 / 1000
+        elif l["name"].startswith("Electricity net consumption"):
+            for d in l["data"]:
+                if d[0] == args.year and d[1] != "ie" and d[1] != "--":
+                    ndat[countrycode]["electricity"] = (
+                        float(d[1]) / ndat[countrycode]["population"]
+                    )
+
+mdat = {}
+x = []
+y = []
+for k, v in ndat.items():
+    if v["countryname"] == "World":
+        continue
+    # skipping incomplete data
+    if args.plotx not in v or args.ploty not in v:
+        continue
+    if "population" not in v:
+        continue
+    if args.skipsmall and v["population"] < args.skipsmall:
+        continue
+    if args.filterxbelow and v[args.plotx] < args.filterxbelow:
+        continue
+    if args.filterxabove and v[args.plotx] >= args.filterxbelow:
+        continue
+    if args.filterybelow and v[args.ploty] < args.filterybelow:
+        continue
+    if args.filteryabove and v[args.ploty] >= args.filterybelow:
+        continue
+    if (
+        args.hidenames
+        and v["population"] < 100 * 10**6
+        and v["energy"] < 30
+        and v["income"] < 12000
+    ):
+        v["countryname"] = ""
+    mdat[k] = v
+    x.append(v[args.plotx])
+    y.append(v[args.ploty])
+
+try:
+    import scipy
+
+    linre = scipy.stats.linregress(x, y)
+    print("r : " + str(linre.rvalue))
+    print("r^2 : " + str(linre.rvalue**2))
+except ImportError:
+    print("scipy not available, cannot calculate r (correlation coefficient)")
+
+fig = px.scatter(
+    mdat.values(),
+    x=args.plotx,
+    y=args.ploty,
+    size="population",
+    size_max=100,
+    text="countryname",
+    width=640,
+    height=360,
+)
+
+fig.update_layout(
+    plot_bgcolor="Cornsilk",
+    margin={"l": 0, "r": 0, "b": 0, "t": 0},
+    font={"family": "Roboto"},
+)
+fig.update_xaxes(gridcolor="lightgrey", rangemode="tozero")
+fig.update_yaxes(gridcolor="lightgrey", rangemode="tozero")
+
+if args.plotx in VERBOSE_DESC:
+    fig.update_layout(xaxis_title=VERBOSE_DESC[args.plotx])
+if args.ploty in VERBOSE_DESC:
+    fig.update_layout(yaxis_title=VERBOSE_DESC[args.ploty])
+
+
+if not args.noshow:
+    fig.show()
+
+if args.png:
+    fig.write_image(args.png)
+if args.svg:
+    fig.write_image(args.svg)
+if args.html:
+    fig.write_html(
+        args.html,
+        include_plotlyjs=False,
+        include_mathjax=False,
+        full_html=False,
+        div_id=args.divid,
+    )
