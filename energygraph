@@ -118,7 +118,7 @@ try:
 
     linre = scipy.stats.linregress(x, y)
     print("r : " + str(linre.rvalue))
-    print("r^2 : " + str(linre.rvalue**2))
+    print("R^2 : " + str(linre.rvalue**2))
 except ImportError:
     print("scipy not available, cannot calculate r (correlation coefficient)")
 
