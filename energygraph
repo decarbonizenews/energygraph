@@ -6,10 +6,10 @@ import json
 
 import plotly.express as px
 
-GDP_DATA = "data/wb-gdp/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_584781.csv"
-INCOME_DATA = "data/wb-income/API_NY.ADJ.NNTY.PC.CD_DS2_en_csv_v2_422024.csv"
-POPU_DATA = "data/wb-population/API_SP.POP.TOTL_DS2_en_csv_v2_584796.csv"
-EIA_DATA = "data/eia/INTL.txt"
+GDP_DATA = "unpacked-data/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_739905.csv"
+INCOME_DATA = "unpacked-data/API_NY.ADJ.NNTY.PC.CD_DS2_en_csv_v2_741613.csv"
+POPU_DATA = "unpacked-data/API_SP.POP.TOTL_DS2_en_csv_v2_739890.csv"
+EIA_DATA = "unpacked-data/INTL.txt"
 
 INVALID_VALUES = ["NA", "--", "", 0]
 
