@@ -3,6 +3,7 @@
 import argparse
 import csv
 import json
+import math
 
 import plotly.express as px
 
@@ -30,6 +31,7 @@ ap.add_argument("--filterybelow", type=int)
 ap.add_argument("--filteryabove", type=int)
 ap.add_argument("--hidenames", action="store_true")
 ap.add_argument("--noshow", action="store_true")
+ap.add_argument("--logstats", action="store_true")
 ap.add_argument("--png")
 ap.add_argument("--svg")
 ap.add_argument("--html")
@@ -84,6 +86,8 @@ with open(EIA_DATA, encoding="ascii") as f:
 mdat = {}
 x = []
 y = []
+x_log = []
+y_log = []
 for k, v in ndat.items():
     if v["countryname"] == "World":
         continue
@@ -112,6 +116,9 @@ for k, v in ndat.items():
     mdat[k] = v
     x.append(v[args.plotx])
     y.append(v[args.ploty])
+    if args.logstats:
+        x_log.append(math.log(v[args.plotx]))
+        y_log.append(math.log(v[args.ploty]))
 
 try:
     import scipy
@@ -119,6 +126,10 @@ try:
     linre = scipy.stats.linregress(x, y)
     print("r : " + str(linre.rvalue))
     print("R^2 : " + str(linre.rvalue**2))
+    if args.logstats:
+        linrelog = scipy.stats.linregress(x_log, y_log)
+        print("r over log inputs (misleading): " + str(linrelog.rvalue))
+        print("R^2 over log inputs (misleading): " + str(linrelog.rvalue**2))
 except ImportError:
     print("scipy not available, cannot calculate r (correlation coefficient)")
 
