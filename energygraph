@@ -20,7 +20,7 @@ VERBOSE_DESC = {
 
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-y", "--year", default="2019")
+ap.add_argument("-y", "--year", default="2021")
 ap.add_argument("--plotx", default="income")
 ap.add_argument("--ploty", default="energy")
 ap.add_argument("--skipsmall", type=int)
