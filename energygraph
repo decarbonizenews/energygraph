@@ -29,6 +29,8 @@ ap.add_argument("--filterxbelow", type=int)
 ap.add_argument("--filterxabove", type=int)
 ap.add_argument("--filterybelow", type=int)
 ap.add_argument("--filteryabove", type=int)
+ap.add_argument("--logx", action="store_true")
+ap.add_argument("--logy", action="store_true")
 ap.add_argument("--hidenames", action="store_true")
 ap.add_argument("--noshow", action="store_true")
 ap.add_argument("--logstats", action="store_true")
@@ -142,6 +144,8 @@ fig = px.scatter(
     text="countryname",
     width=640,
     height=360,
+    log_x=args.logx,
+    log_y=args.logy,
 )
 
 fig.update_layout(
