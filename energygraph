@@ -102,11 +102,11 @@ for k, v in ndat.items():
         continue
     if args.filterxbelow and v[args.plotx] < args.filterxbelow:
         continue
-    if args.filterxabove and v[args.plotx] >= args.filterxbelow:
+    if args.filterxabove and v[args.plotx] >= args.filterxabove:
         continue
     if args.filterybelow and v[args.ploty] < args.filterybelow:
         continue
-    if args.filteryabove and v[args.ploty] >= args.filterybelow:
+    if args.filteryabove and v[args.ploty] >= args.filteryabove:
         continue
     if (
         args.hidenames
