@@ -108,13 +108,14 @@ for k, v in ndat.items():
         continue
     if args.filteryabove and v[args.ploty] >= args.filteryabove:
         continue
-    if (
-        args.hidenames
-        and v["population"] < 100 * 10**6
-        and v["energy"] < 30
-        and v["income"] < 12000
-    ):
-        v["countryname"] = ""
+    v["label"] = v["countryname"]
+    if args.hidenames:
+        # Custom-tuned to avoid overlapping names, unfortunately,
+        # plotly does not have a function to automate this
+        if v["population"] < (300 * 10**6) and v["energy"] < 40 and v["income"] < 12000:
+            v["label"] = ""
+        if v["population"] < (20 * 10**6) and v["income"] < 48000:
+            v["label"] = ""
     mdat[k] = v
     x.append(v[args.plotx])
     y.append(v[args.ploty])
@@ -141,17 +142,26 @@ fig = px.scatter(
     y=args.ploty,
     size="population",
     size_max=50,
-    text="countryname",
+    text="label",
     width=640,
     height=360,
     log_x=args.logx,
     log_y=args.logy,
+    color_discrete_sequence=["DodgerBlue"],
+    custom_data=["countryname", "population"],
 )
 
+htemplate = "%{customdata[0]}<br>"
+htemplate += args.plotx + ": %{x}<br>"
+htemplate += args.ploty + ": %{y}<br>"
+htemplate += "Population: %{customdata[1]}"
+fig.update_traces(hovertemplate=htemplate)
+
 fig.update_layout(
-    plot_bgcolor="Cornsilk",
+    plot_bgcolor="FloralWhite",
+    paper_bgcolor="GhostWhite",
     margin={"l": 0, "r": 0, "b": 0, "t": 0},
-    font={"family": "Roboto"},
+    font={"family": "Roboto,Helvetica,Sans-Serif"},
 )
 fig.update_xaxes(gridcolor="lightgrey", rangemode="tozero")
 fig.update_yaxes(gridcolor="lightgrey", rangemode="tozero")
