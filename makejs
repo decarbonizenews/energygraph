@@ -11,6 +11,14 @@ XNAME=gdpelectricity
 ./energygraph --plotx=gdp --ploty=electricity --html=$TMPD/$XNAME.html --divid=$XNAME --noshow
 sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
 
+XNAME=incomeenergy19
+./energygraph --html=$TMPD/$XNAME.html --divid=$XNAME --noshow --year=2019
+sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
+
+XNAME=gdpelectricity19
+./energygraph --plotx=gdp --ploty=electricity --html=$TMPD/$XNAME.html --divid=$XNAME --noshow --year=2019
+sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
+
 XNAME=random
 ./randomgraph --html=$TMPD/$XNAME.html --divid=$XNAME --noshow
 sed -e 's:.*<script[^>]*>::g' -e 's:</script>.*::g' $TMPD/$XNAME.html >$TMPD/_$XNAME.tmp
