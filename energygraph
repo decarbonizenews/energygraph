@@ -56,7 +56,7 @@ def wbdat(filename, datayear, key):
                         started = True
             elif started and row[ind] not in INVALID_VALUES:
                 country = row[1]
-                countryname = row[0]
+                countryname = row[0].split(",")[0]
                 if country not in ndat:
                     ndat[country] = {"countryname": countryname}
                 ndat[country][key] = float(row[ind])
@@ -137,7 +137,7 @@ except ImportError:
     print("scipy not available, cannot calculate r (correlation coefficient)")
 
 fig = px.scatter(
-    mdat.values(),
+    sorted(mdat.values(), key=lambda d: d["population"], reverse=True),
     x=args.plotx,
     y=args.ploty,
     size="population",
