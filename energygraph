@@ -135,8 +135,8 @@ try:
     print("R^2 : " + str(linre.rvalue**2))
     if args.logstats:
         linrelog = scipy.stats.linregress(x_log, y_log)
-        print("r over log inputs (misleading): " + str(linrelog.rvalue))
-        print("R^2 over log inputs (misleading): " + str(linrelog.rvalue**2))
+        print("r over log inputs: " + str(linrelog.rvalue))
+        print("R^2 over log inputs: " + str(linrelog.rvalue**2))
 except ImportError:
     print("scipy not available, cannot calculate r (correlation coefficient)")
 
