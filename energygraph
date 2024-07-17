@@ -16,11 +16,13 @@ INCOME_DATA = "unpacked-data/API_NY.ADJ.NNTY.PC.CD_DS2_en_csv_v2_741613.csv"
 POPU_DATA = "unpacked-data/API_SP.POP.TOTL_DS2_en_csv_v2_739890.csv"
 EIA_DATA = "unpacked-data/INTL.txt"
 
-INVALID_VALUES = ["NA", "--", "", 0]
+INVALID_VALUES = ["NA", "--", "ie", "", 0]
 
 VERBOSE_DESC = {
     "income": "Average Income (US$)",
     "energy": "Energy Consumption per Capita (MWh)",
+    "gdp": "GDP per Capita (US$)",
+    "electricity": "Electricity Consumption per Capita (MWh)",
 }
 
 
@@ -84,9 +86,9 @@ with open(EIA_DATA, encoding="ascii") as f:
                     ndat[countrycode]["energy"] = energy_mbtu * 293.07107 / 1000
         elif l["name"].startswith("Electricity net consumption"):
             for d in l["data"]:
-                if d[0] == args.year and d[1] != "ie" and d[1] != "--":
+                if d[0] == args.year and d[1] not in INVALID_VALUES:
                     ndat[countrycode]["electricity"] = (
-                        float(d[1]) / ndat[countrycode]["population"]
+                        float(d[1]) * 1000000 / ndat[countrycode]["population"]
                     )
 
 mdat = {}
