@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FN="sharepicenergy"
+FN="infographicenergy"
 
 SVGADD='<g style="font-family:Roboto, Helvetica, sans-serif;font-size:20px;font-weight:bold;">
 <text x="60" y="45">High-income countries like</text>
