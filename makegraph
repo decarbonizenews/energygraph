@@ -1,0 +1,5 @@
+#!/bin/bash
+
+./energygraph --svg=_incomeenergy.svg --png=_incomeenergy.png --skipsmall=5000000 --hidenames --noshow
+cwebp _incomeenergy.png -noalpha -near_lossless 0 -o incomeenergy.webp
+svgx _incomeenergy.svg incomeenergy.svg
