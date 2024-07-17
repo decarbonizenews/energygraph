@@ -1,11 +1,12 @@
 The code uses [plotly.js](https://plotly.com/javascript/). At the time of writing this,
-the current version was 2.33.0. It should be updated if there are significant bug fixes or
-security issues.
+the current version was 2.33.0. It should be updated if there are significant bug fixes
+or security issues.
 
 Custom Bundle
 -------------
 
-In order to reduce the size of the Javascript, we generate a [custom bundle](https://github.com/plotly/plotly.js/blob/master/CUSTOM_BUNDLE.md) only supporting the
+To reduce the size of the Javascript, we generate a [custom bundle](
+https://github.com/plotly/plotly.js/blob/master/CUSTOM_BUNDLE.md) only supporting the
 scatter plot functionality:
 
 
@@ -16,7 +17,7 @@ npm i
 npm run custom-bundle -- --out scatter --traces scatter --strict
 ```
 
-`--strict` should improve compatibiltiy with CSP.
+`--strict` should improve compatibility with CSP.
 
 Content Security Policy
 -----------------------
