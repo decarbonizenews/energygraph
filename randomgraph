@@ -5,6 +5,10 @@ import random
 
 import plotly.express as px
 
+COLORBG = "#fff5e6"
+COLORDOT = "#ff9700"
+COLORPAPER = "#fafafa"
+
 # to get the same output on mutliple runs
 random.seed(1)
 
@@ -48,12 +52,14 @@ fig = px.scatter(
     log_y=True,
     width=640,
     height=360,
+    color_discrete_sequence=[COLORDOT],
 )
 
 fig.update_layout(
-    plot_bgcolor="Cornsilk",
+    plot_bgcolor=COLORBG,
+    paper_bgcolor=COLORPAPER,
     margin={"l": 0, "r": 0, "b": 0, "t": 0},
-    font={"family": "Roboto"},
+    font={"family": "Roboto,Helvetica,Sans-Serif", "weight": "bold"},
     xaxis_title="Random data",
     yaxis_title="Random data",
 )
