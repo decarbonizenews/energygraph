@@ -1,0 +1,28 @@
+#!/bin/bash
+
+FN="sharepicenergy"
+
+SVGADD='<g style="font-family:Roboto, Helvetica, sans-serif;font-size:20px;font-weight:bold;">
+<text x="60" y="45">High-income countries like</text>
+<text x="60" y="75">Switzerland or Denmark have a</text>
+<text x="60" y="105">very low energy consumption,</text>
+<text x="60" y="135">less than half compared to the</text>
+<text x="60" y="165">US or Canada</text>
+</g>
+<g style="font-family:Roboto, Helvetica, sans-serif;font-size:12px;fill: rgb(42, 63, 95);">
+<text x="450" y="345">2021 (Data: World Bank, US EIA)</text>
+<text x="450" y="357" font-style="italic">https://industrydecarbonization.com</text>
+</g>
+'
+
+./energygraph --svg=_$FN.svg --skipsmall=5000000 --hidenames --noshow
+
+sed -i -e 's:class="xtitle" x="343":class="xtitle" x="250":g' _$FN.svg
+sed -i -e 's:</svg>::g' _$FN.svg
+echo "$SVGADD" >> _$FN.svg
+echo '</svg>' >> _$FN.svg
+
+svgx _$FN.svg $FN.svg
+
+convert -alpha off -resize 1920 $FN.svg _$FN.png
+zopflipng -y _$FN.png $FN.png
