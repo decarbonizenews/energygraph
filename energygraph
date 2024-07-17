@@ -7,6 +7,10 @@ import math
 
 import plotly.express as px
 
+COLORBG = "#fff5e6"
+COLORDOT = "#ff9700"
+COLORPAPER = "#fafafa"
+
 GDP_DATA = "unpacked-data/API_NY.GDP.PCAP.CD_DS2_en_csv_v2_739905.csv"
 INCOME_DATA = "unpacked-data/API_NY.ADJ.NNTY.PC.CD_DS2_en_csv_v2_741613.csv"
 POPU_DATA = "unpacked-data/API_SP.POP.TOTL_DS2_en_csv_v2_739890.csv"
@@ -147,7 +151,7 @@ fig = px.scatter(
     height=360,
     log_x=args.logx,
     log_y=args.logy,
-    color_discrete_sequence=["DodgerBlue"],
+    color_discrete_sequence=[COLORDOT],
     custom_data=["countryname", "population"],
 )
 
@@ -158,10 +162,10 @@ htemplate += "Population: %{customdata[1]}"
 fig.update_traces(hovertemplate=htemplate)
 
 fig.update_layout(
-    plot_bgcolor="FloralWhite",
-    paper_bgcolor="GhostWhite",
+    plot_bgcolor=COLORBG,
+    paper_bgcolor=COLORPAPER,
     margin={"l": 0, "r": 0, "b": 0, "t": 0},
-    font={"family": "Roboto,Helvetica,Sans-Serif"},
+    font={"family": "Roboto,Helvetica,Sans-Serif", "weight": "bold"},
 )
 fig.update_xaxes(gridcolor="lightgrey", rangemode="tozero")
 fig.update_yaxes(gridcolor="lightgrey", rangemode="tozero")
