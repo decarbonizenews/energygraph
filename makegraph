@@ -1,5 +1,19 @@
 #!/bin/bash
 
-./energygraph --svg=_incomeenergy.svg --png=_incomeenergy.png --skipsmall=5000000 --hidenames --noshow
-cwebp _incomeenergy.png -noalpha -near_lossless 0 -o incomeenergy.webp
-svgx _incomeenergy.svg incomeenergy.svg
+FN="incomeenergy"
+
+SVGADD='<g style="font-family:Roboto, Helvetica, sans-serif;font-size:12px;fill: rgb(42, 63, 95);">
+<text x="450" y="345">2021 (Data: World Bank, US EIA)</text>
+<text x="450" y="357" font-style="italic">https://industrydecarbonization.com</text>
+</g>
+'
+
+./energygraph --svg=_$FN.svg --skipsmall=5000000 --hidenames --noshow
+
+sed -i -e 's:class="xtitle" x="343":class="xtitle" x="250":g' _$FN.svg
+sed -i -e 's:</svg>::g' _$FN.svg
+echo "$SVGADD"'</svg>' >> _$FN.svg
+
+convert _$FN.svg _$FN.png
+cwebp _$FN.png -noalpha -near_lossless 0 -o $FN.webp
+svgx _$FN.svg $FN.svg
