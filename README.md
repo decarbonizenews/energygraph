@@ -2,7 +2,7 @@
 
 Code used to create infographics on energy vs. income.
 
-[<img src="incomeenergy.svg" alt="Income/Energy Infographic" width="640" height="360">](
+[<img src="infographicenergy.svg" alt="Income/Energy Infographic" width="640" height="360">](
 https://industrydecarbonization.com/news/misleading-logarithmic-scales-and-the-disregard-for-energy-efficiency.html)
 
 For context, see: [Misleading Logarithmic Scales and the Disregard for Energy
