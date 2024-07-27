@@ -2,11 +2,14 @@
 
 Code used to create infographics on energy vs. income.
 
-See: [Misleading Logarithmic Scales and the Disregard for Energy Efficiency](
+[![Income/Energy Infographic](incomeenergy.svg)
+
+For context, see: [Misleading Logarithmic Scales and the Disregard for Energy
+Efficiency](
 https://industrydecarbonization.com/news/misleading-logarithmic-scales-and-the-disregard-for-energy-efficiency.html)
 
-[Interactive and zoomable versions](
-https://industrydecarbonization.com/misc/incomeenergy.html)
+[Interactive and zoomable versions can be found here](
+https://industrydecarbonization.com/misc/incomeenergy.html).
 
 ## data
 
